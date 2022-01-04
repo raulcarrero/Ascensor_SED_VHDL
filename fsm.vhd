@@ -37,8 +37,6 @@ generic(
     Pisos: positive:= 4
 );
    Port ( 
-         START:             out std_logic; -- 0 BAJANDO, 1 SUBIENDO
-         DONE:              in std_logic;
          RESET:             in std_logic;
          CLK:               in std_logic;
          BOTON_Piso:        in std_logic_vector(pisos-1 downto 0);
