@@ -192,4 +192,4 @@ begin
          MOTOR             => MOTOR,
          PUERTA            => PUERTA
     );
-end Behavioral;
+end Structural;
