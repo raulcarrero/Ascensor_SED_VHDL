@@ -37,7 +37,7 @@ entity top is
         SENSOR:            in  std_logic_vector(3 downto 0); --Sensores de posición situados en cada piso
         BOTON_Piso:        in  std_logic_vector(3 downto 0); --Botones para llamar al ascensor
         led:               out std_logic_vector(6 DOWNTO 0); --Display 7 segmentos indicador del piso actual
-        MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01; Bajada = 10; Parada = 00
+        MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01 Led VERDE; Bajada = 10 Led AZUL; Parada = 00
         PUERTA:            out std_logic                     --Abierta = 1; Cerrada y bloqueada = 0
     );
 end top;
