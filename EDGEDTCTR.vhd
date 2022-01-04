@@ -31,14 +31,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity EDGEDTCTR is
     port (
-        CLK     : in  std_logic;
-        SYNC_IN : in  std_logic;
-        EDGE    : out std_logic
+        CLK     : in  std_logic;    --Reloj común
+        SYNC_IN : in  std_logic;    --Entrada síncrona de duración indeterminada
+        EDGE    : out std_logic     --Salida síncrona que solo dura un ciclo de reloj a nivel alto
     );
 end EDGEDTCTR;
 
 architecture BEHAVIORAL of EDGEDTCTR is
+    
+--DECLARACIÓN DE SEÑALES INTERNAS
  signal sreg : std_logic_vector(2 downto 0);
+
 begin
     process (CLK)
         begin
@@ -47,6 +50,6 @@ begin
             end if;
         end process;
     with sreg select
-    EDGE <= '1' when "100",
-            '0' when others;
+        EDGE <= '1' when "100",
+                '0' when others;
 end BEHAVIORAL;
