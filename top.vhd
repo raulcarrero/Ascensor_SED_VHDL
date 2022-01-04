@@ -72,7 +72,7 @@ architecture Structural of top is
     end component;
 
   --Máquina de estados del Ascensor
-    component FSM_Asc is  
+    component fsm is  
         generic(
             Pisos: positive:= 4);
         Port( 
@@ -185,7 +185,7 @@ begin
         EDGE    =>  edge3
     );
 
-    inst_FSM_Asc: FSM_Asc port map(
+    inst_fsm: fsm port map(
          RESET             => RESET,
          CLK               => CLK,
          BOTON_Piso(0)     => edge0,
