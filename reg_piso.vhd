@@ -32,20 +32,21 @@ use IEEE.NUMERIC_STD.ALL;
 --use UNISIM.VComponents.all;
 
 entity reg_piso is
-
     generic(
-        Pisos: natural:= 4
+        Pisos: natural:= 4  --Numero de pisos que tiene el edificio
     );
     Port (
-        RESET:       in std_logic;
-        CLK:         in std_logic;
-        SENSOR:      in std_logic_vector(3 downto 0);
-        ULTIMO_PISO: out std_logic_vector(1 downto 0)
+        RESET:       in std_logic;                      --Reset a nivel bajo
+        CLK:         in std_logic;                      --Reloj común
+        SENSOR:      in std_logic_vector(3 downto 0);   --Sensores de posición situados en cada piso
+        ULTIMO_PISO: out std_logic_vector(1 downto 0)   --Último piso por el que pasó el ascensor
     );
 end reg_piso;
 
 architecture Behavioral of reg_piso is
-signal ULTIMO_PISO_S: integer(1 downto 0);
+--DECLARACIÓN DE SEÑALES INTERNAS
+    signal ULTIMO_PISO_S: integer(1 downto 0); --Señal interna que almacena el último piso antes de copiarlo a la salida
+
 begin
     process(RESET,CLK)
     begin
