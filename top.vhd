@@ -17,11 +17,6 @@
 -- Additional Comments:
 -- 
 ----------------------------------------------------------------------------------
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
-
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -31,82 +26,90 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+
 entity top is
     Port(
-        RESET:             in  std_logic;
-        CLK:               in  std_logic;
-        SENSOR:            in  std_logic_vector(3 downto 0);
-        BOTON_Piso:        in  std_logic_vector(3 downto 0);
-        led:               out std_logic_vector(6 DOWNTO 0)
+        RESET:             in  std_logic;                    --Reset activo a nivel BAJO
+        CLK:               in  std_logic;                    --Señal de reloj común para todos los componentes
+        SENSOR:            in  std_logic_vector(3 downto 0); --Sensores de posición situados en cada piso
+        BOTON_Piso:        in  std_logic_vector(3 downto 0); --Botones para llamar al ascensor
+        led:               out std_logic_vector(6 DOWNTO 0); --Display 7 segmentos indicador del piso actual
+        MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01; Bajada = 10; Parada = 00
+        PUERTA:            out std_logic                     --Abierta = 1; Cerrada y bloqueada = 0
     );
 end top;
 
 architecture Structural of top is
-component debounce IS
-    GENERIC(
-        counter_size  :  INTEGER := 19); --counter size (19 bits gives 10.5ms with 50MHz clock)
-    PORT(
-        clk     : IN  STD_LOGIC;  --input clock
-        button  : IN  STD_LOGIC;  --input signal to be debounced
-        result  : OUT STD_LOGIC); --debounced signal
-END component;
 
-component SYNCHRNZR is
-    port (
-        CLK      : in  std_logic;
-        ASYNC_IN : in  std_logic;
-        SYNC_OUT : out std_logic
-    );
-end component;
+--DECLARACIÓN DE COMPONENTES
+  --Módulo antirrebote
+    component debounce IS 
+        GENERIC(
+            counter_size  :  INTEGER := 19); --counter size (19 bits gives 10.5ms with 50MHz clock)
+        PORT(
+            clk     : IN  STD_LOGIC;  --input clock
+            button  : IN  STD_LOGIC;  --input signal to be debounced
+            result  : OUT STD_LOGIC); --debounced signal
+    END component;
     
-component EDGEDTCTR is
-    port (
-        CLK     : in  std_logic;
-        SYNC_IN : in  std_logic;
-        EDGE    : out std_logic
-    );
-end component;
+  --Módulo de sincronización
+    component SYNCHRNZR is 
+        port (
+            CLK      : in  std_logic;  --Reloj común
+            ASYNC_IN : in  std_logic;  --Entrada asíncrona
+            SYNC_OUT : out std_logic); --Salida síncrona
+    end component;
+    
+  --Detector de flanco    
+    component EDGEDTCTR is 
+        port (
+            CLK     : in  std_logic;  --Reloj común
+            SYNC_IN : in  std_logic;  --Entrada síncrona de duración indeterminada
+            EDGE    : out std_logic); --Salida síncrona que solo dura un ciclo de reloj a nivel alto
+    end component;
 
-component FSM_Asc is
-    generic(
-        Pisos: positive:= 4
-    );
-   Port ( 
---       START:             out std_logic; -- 0 BAJANDO, 1 SUBIENDO
---       DONE:              in std_logic;
-         RESET:             in std_logic;
-         CLK:               in std_logic;
-         BOTON_Piso:        in std_logic_vector(3 downto 0);
-         SENSOR:            in std_logic_vector(3 downto 0);
-         MOTOR:             out std_logic_vector(1 downto 0); --Bit 1 bajada, bit 0 subida
-         PUERTA:            out std_logic --1 abierta, 0 cerrada y bloqueada
-   );
-end component;
+  --Máquina de estados del Ascensor
+    component FSM_Asc is  
+        generic(
+            Pisos: positive:= 4);
+        Port( 
+            RESET:             in std_logic;                     --Reset a nivel bajo
+            CLK:               in std_logic;                     --Reloj común
+            BOTON_Piso:        in std_logic_vector(3 downto 0);  --Botones para llamar al ascensor
+            SENSOR:            in std_logic_vector(3 downto 0);  --Sensores de posición situados en cada piso
+            MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01; Bajada = 10; Parada = 00
+            PUERTA:            out std_logic);                   --Abierta = 1; Cerrada y bloqueada = 0
+    end component;
 
+  --Registro de piso
+    component reg_piso is 
+        generic(
+            Pisos: natural:= 4);
+        Port (
+            RESET:       in std_logic;                      --Reset activo a nivel bajo
+            CLK:         in std_logic;                      --Reloj común
+            SENSOR:      in std_logic_vector(3 downto 0);   --Sensores de posición situados en cada piso
+            ULTIMO_PISO: out std_logic_vector(1 downto 0)); --Salida que indica el último piso por el que pasó el ascensor
+    end component;
 
-component reg_piso is
-    generic(
-        Pisos: natural:= 4
-    );
-    Port (
-        RESET:       in std_logic;
-        CLK:         in std_logic;
-        SENSOR:      in std_logic_vector(3 downto 0);
-        ULTIMO_PISO: out std_logic_vector(1 downto 0)
-    );
-end component;
+  --Decodificador de binario a 7 segmentos
+    component dec IS 
+        PORT (
+            code : IN std_logic_vector(1 DOWNTO 0);     --Valor decimal codificado en binario
+            led  : OUT std_logic_vector(6 DOWNTO 0));   --Leds a encender en el display 7 segmentos para representar el valor de entrada
+    END component;
 
-component dec IS
-    PORT (
-        code : IN std_logic_vector(1 DOWNTO 0);
-        led  : OUT std_logic_vector(6 DOWNTO 0)
-    );
-END component;
-signal code_i: std_logic_vector(1 DOWNTO 0);
-signal result0, result1, result2, result3: std_logic;
-signal sync_out0, sync_out1, sync_out2, sync_out3: std_logic;
-signal edge0, edge1, edge2, edge3: std_logic;
+--DECLARACIÓN DE SEÑALES INTERNAS
+    signal code_i: std_logic_vector(1 DOWNTO 0);                    --Señal que va desde reg_piso hasta dec (decodificador)
+    signal result0, result1, result2, result3: std_logic;           --Señales que van de cada antirrebote a cada sincronizador
+    signal sync_out0, sync_out1, sync_out2, sync_out3: std_logic;   --Señales que van de cada sincronizador a cada detector de flanco
+    signal edge0, edge1, edge2, edge3: std_logic;                   --Señales que van de cada detector de flanco a la máquina de estados
+
 begin
+--INSTANCIACIÓN DE COMPONENTES
     inst_reg_piso: reg_piso port map(
         RESET       =>  RESET,
         CLK         =>  CLK,
@@ -117,7 +120,8 @@ begin
         code    =>  code_i,
         led     =>  led
     );
-    
+
+--UTILIZAMOS 4 COMPONENTES DE CADA TIPO (Antirrebote, Sincronizador, Detector de flanco), UNO PARA CADA BOTÓN    
     inst_debounce0: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(0),
