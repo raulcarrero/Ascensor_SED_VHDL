@@ -22,10 +22,11 @@ LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
 USE ieee.std_logic_arith.ALL;
 USE ieee.std_logic_unsigned.ALL;
+
 ENTITY dec IS
     PORT (
-        code : IN std_logic_vector(1 DOWNTO 0);
-        led  : OUT std_logic_vector(6 DOWNTO 0)
+        code : IN std_logic_vector(1 DOWNTO 0); --Valor decimal codificado en binario
+        led  : OUT std_logic_vector(6 DOWNTO 0) --Leds a encender en el display 7 segmentos para representar el valor de entrada
     );
 END ENTITY dec;
 
