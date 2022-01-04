@@ -41,7 +41,7 @@ entity top is
     );
 end top;
 
-architecture Behavioral of top is
+architecture Structural of top is
 component debounce IS
     GENERIC(
         counter_size  :  INTEGER := 19); --counter size (19 bits gives 10.5ms with 50MHz clock)
