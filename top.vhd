@@ -92,7 +92,7 @@ architecture Structural of top is
             RESET:       in std_logic;                      --Reset activo a nivel bajo
             CLK:         in std_logic;                      --Reloj común
             SENSOR:      in std_logic_vector(3 downto 0);   --Sensores de posición situados en cada piso
-            ULTIMO_PISO: out std_logic_vector(1 downto 0)); --Salida que indica el último piso por el que pasó el ascensor
+            ULTIMO_PISO: out std_logic_vector(1 downto 0)); --Último piso por el que pasó el ascensor
     end component;
 
   --Decodificador de binario a 7 segmentos
