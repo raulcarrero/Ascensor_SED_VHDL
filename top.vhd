@@ -22,7 +22,8 @@ entity top is
         MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01 Led VERDE; Bajada = 10 Led AZUL; Parada = 00
         PUERTA:            out std_logic;                    --Abierta = 1; Cerrada y bloqueada = 0
         PUERTA_n:          out std_logic;                    --Variable puerta negada, usada para encender un led diferente cuando está cerrada
-        AN:                out std_logic_vector(7 downto 0)  --Ánodos de los display de 7 segmentos
+        AN:                out std_logic_vector(7 downto 0); --Ánodos de los display de 7 segmentos
+        led_SENSOR:        out std_logic_vector(3 downto 0)  --Luces indicativas de que el sensor está activado
     );
 end top;
 
@@ -96,8 +97,10 @@ architecture Structural of top is
 
 begin
 
-    AN <= "00000001";       --Apagar todos los displays de 7 segmentos salvo uno
-    PUERTA_n <= not PUERTA; --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
+    AN         <= "00000001";   --Apagar todos los displays de 7 segmentos salvo uno
+    PUERTA_n   <= not PUERTA;   --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
+    led_SENSOR <= SENSOR;       --Encendemos un led cada vez que un sensor se activa,
+                                --su única utilidad es que no dejemos un switch (que simula un sensor) activado sin darnos cuenta
 --INSTANCIACIÓN DE COMPONENTES
     inst_reg_piso: reg_piso port map(
         RESET       =>  RESET,
