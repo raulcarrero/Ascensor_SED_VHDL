@@ -20,7 +20,8 @@ entity top is
         BOTON_Piso:        in  std_logic_vector(3 downto 0); --Botones para llamar al ascensor
         led:               out std_logic_vector(6 DOWNTO 0); --Display 7 segmentos indicador del piso actual
         MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01 Led VERDE; Bajada = 10 Led AZUL; Parada = 00
-        PUERTA:            out std_logic                     --Abierta = 1; Cerrada y bloqueada = 0
+        PUERTA:            out std_logic;                     --Abierta = 1; Cerrada y bloqueada = 0
+        AN:                out std_logic_vector(7 downto 0)  --Ánodos de los display de 7 segmentos
     );
 end top;
 
@@ -93,6 +94,8 @@ architecture Structural of top is
     signal edge_i: std_logic_vector(width-1 downto 0);       --Señal que va del detector de flanco a la máquina de estados
 
 begin
+
+    AN <= "00000001";   --Apagar todos los displays de 7 segmentos salvo uno
 --INSTANCIACIÓN DE COMPONENTES
     inst_reg_piso: reg_piso port map(
         RESET       =>  RESET,
@@ -105,7 +108,7 @@ begin
         led     =>  led
     );
 
---UTILIZAMOS 4 MÓDULOS ANTIRREBOTE, UNO PARA CADA BOTÓN    
+    --UTILIZAMOS 4 MÓDULOS ANTIRREBOTE, UNO PARA CADA BOTÓN    
     inst_debounce0: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(0),
