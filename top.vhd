@@ -33,7 +33,7 @@ architecture Structural of top is
   --Módulo antirrebote
     component debounce IS 
         GENERIC(
-            counter_size  :  INTEGER := 19); --counter size (19 bits gives 10.5ms with 50MHz clock)
+            counter_size  :  positive := 19); --counter size (19 bits gives 10.5ms with 50MHz clock)
         PORT(
             clk     : IN  STD_LOGIC;  --input clock
             button  : IN  STD_LOGIC;  --input signal to be debounced
@@ -91,14 +91,16 @@ architecture Structural of top is
 
 --DECLARACIÓN DE SEÑALES INTERNAS
     signal code_i: std_logic_vector(1 DOWNTO 0);             --Señal que va desde reg_piso hasta dec (decodificador)
-    signal result0, result1, result2, result3: std_logic;    --Señales que van de cada antirrebote al sincronizador
+    signal result: std_logic_vector(width-1 downto 0);       --Señales que van de cada antirrebote al sincronizador
     signal sync_out_i: std_logic_vector(width-1 downto 0);   --Señal que va del sincronizador al detector de flanco
     signal edge_i: std_logic_vector(width-1 downto 0);       --Señal que va del detector de flanco a la máquina de estados
+    signal p_i: std_logic;                                   --Señal auxiliar entre puerta y puerta_n
 
 begin
 
     AN         <= "00000001";   --Apagar todos los displays de 7 segmentos salvo uno
-    PUERTA_n   <= not PUERTA;   --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
+    PUERTA     <= p_i;
+    PUERTA_n   <= not p_i;   --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
     led_SENSOR <= SENSOR;       --Encendemos un led cada vez que un sensor se activa,
                                 --su única utilidad es que no dejemos un switch (que simula un sensor) activado sin darnos cuenta
 --INSTANCIACIÓN DE COMPONENTES
@@ -117,30 +119,27 @@ begin
     inst_debounce0: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(0),
-        result  =>  result0
+        result  =>  result(0)
     );
     inst_debounce1: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(1),
-        result  =>  result1
+        result  =>  result(1)
     );
     inst_debounce2: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(2),
-        result  =>  result2
+        result  =>  result(2)
     );
     inst_debounce3: debounce port map(
         clk     =>  CLK,
         button  =>  BOTON_Piso(3),
-        result  =>  result3
+        result  =>  result(3)
     );
     
     inst_SYNCHRNZR: SYNCHRNZR port map(
         CLK         => CLK,
-        ASYNC_IN(0) => result0,
-        ASYNC_IN(1) => result1,
-        ASYNC_IN(2) => result2,
-        ASYNC_IN(3) => result3,
+        ASYNC_IN    => result,
         SYNC_OUT    => sync_out_i
     );
 
@@ -156,6 +155,6 @@ begin
          BOTON_Piso        => edge_i,
          SENSOR            => SENSOR,
          MOTOR             => MOTOR,
-         PUERTA            => PUERTA
+         PUERTA            => p_i
     );
 end Structural;
