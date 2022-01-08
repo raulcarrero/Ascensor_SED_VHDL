@@ -15,6 +15,7 @@ entity top is
     generic(width : positive := 4);
     Port(
         RESET:             in  std_logic;                    --Reset activo a nivel BAJO
+        EMERGENCIA:        in  std_logic;                    --Botón de parada de emergencia
         CLK:               in  std_logic;                    --Señal de reloj común para todos los componentes
         SENSOR:            in  std_logic_vector(3 downto 0); --Sensores de posición situados en cada piso
         BOTON_Piso:        in  std_logic_vector(3 downto 0); --Botones para llamar al ascensor
@@ -59,12 +60,14 @@ architecture Structural of top is
     end component;
 
   --Máquina de estados del Ascensor
-    component FSM_Asc is  
+    component fsm is  
         generic(
             Pisos: positive:= 4);
         Port( 
             RESET:             in std_logic;                     --Reset a nivel bajo
+            EMERGENCIA:        in std_logic;                     --Boton de parada de emergencia para el usuario
             CLK:               in std_logic;                     --Reloj común
+            ULTIMO_PISO:       in std_logic_vector (1 downto 0); --Entrada desde reg_piso, usada en caso de emergencia
             BOTON_Piso:        in std_logic_vector(3 downto 0);  --Botones para llamar al ascensor
             SENSOR:            in std_logic_vector(3 downto 0);  --Sensores de posición situados en cada piso
             MOTOR:             out std_logic_vector(1 downto 0); --Subida = 01; Bajada = 10; Parada = 00
@@ -151,7 +154,9 @@ begin
 
     inst_FSM_Asc: FSM_Asc port map(
          RESET             => RESET,
+         EMERGENCIA        => EMERGENCIA,
          CLK               => CLK,
+         ULTIMO_PISO       => code_i,
          BOTON_Piso        => edge_i,
          SENSOR            => SENSOR,
          MOTOR             => MOTOR,
