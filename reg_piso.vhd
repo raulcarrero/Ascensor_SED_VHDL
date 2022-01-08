@@ -45,24 +45,34 @@ end reg_piso;
 
 architecture Behavioral of reg_piso is
 --DECLARACIÓN DE SEÑALES INTERNAS
-    signal ULTIMO_PISO_S: integer(1 downto 0); --Señal interna que almacena el último piso antes de copiarlo a la salida
+    signal ultimo_piso_s: std_logic_vector(1 downto 0); --Señal interna que almacena el último piso antes de copiarlo a la salida
 
 begin
-    process(RESET,CLK)
+    process(reset, clk)
     begin
-        if RESET = '0' then
-            ULTIMO_PISO_S <= 0;
-        elsif rising_edge(CLK) then
-            for i in 0 to Pisos - 1 loop
-                 if SENSOR(i) = '1' then 
-                    ULTIMO_PISO_S <= i;
-                 else
-                    ULTIMO_PISO_S <= ULTIMO_PISO_S;
-                 end if;
-           end loop;
+        if reset = '0' then
+            ultimo_piso_s <= "00";
+        elsif rising_edge(clk) then
+            for i in 0 to pisos-1 loop
+                if sensor(i)='1' then
+                    case i is
+                            when 0 =>
+                                    ultimo_piso_s <= "00";
+                            when 1 =>
+                                ultimo_piso_s <= "01";
+                            when 2 =>
+                                ultimo_piso_s <= "10";
+                            when 3 =>
+                                ultimo_piso_s <= "11";
+                            when others =>
+                                ultimo_piso_s <= ultimo_piso_s;
+                     end case;
+                end if;
+            end loop;
         end if;
     end process;
     
-    ULTIMO_PISO <= std_logic_vector(ULTIMO_PISO_S);
+    ultimo_piso <= ultimo_piso_s;
+
 
 end Behavioral;
