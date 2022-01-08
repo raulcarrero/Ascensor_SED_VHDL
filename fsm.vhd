@@ -67,7 +67,7 @@ begin
         end process;
 
 --DECODIFICADOR DEL PRÓXIMO ESTADO: decide cuál será el siguiente estado en función de las entradas y del estado actual    
-    decodificador_proxEstado: process(RESET, BOTON_Piso, Estado_actual, SENSOR)
+    decodificador_proxEstado: process(RESET, BOTON_Piso, Estado_actual, SENSOR, Planta)
         begin
             if RESET = '0' then
                 Estado_siguiente <= S0;
