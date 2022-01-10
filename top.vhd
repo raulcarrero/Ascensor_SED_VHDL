@@ -152,7 +152,7 @@ begin
         EDGE    =>  edge_i
     );
 
-    inst_FSM_Asc: FSM_Asc port map(
+    inst_fsm: fsm port map(
          RESET             => RESET,
          EMERGENCIA        => EMERGENCIA,
          CLK               => CLK,
