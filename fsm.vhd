@@ -63,15 +63,17 @@ begin
 --REGISTRO DE ESTADOS: proceso que refresca el estado en cada ciclo de reloj o resetea el estado
     registro_estados: process(RESET, CLK)
         begin
-            if EMERGENCIA = '1' then
-                if Estado_actual /= SE then
-                    Estado_previo <= Estado_actual;
-                end if;
-                Estado_actual <= SE;
-            elsif RESET = '0' then
+            if RESET = '0' then
                 Estado_actual <= S0;
             elsif rising_edge(CLK) then
-                Estado_actual <= Estado_siguiente;
+                if EMERGENCIA = '1' then
+                    if Estado_actual /= SE then
+                        Estado_previo <= Estado_actual;
+                    end if;
+                    Estado_actual <= SE;
+                else
+                    Estado_actual <= Estado_siguiente;
+                end if;
             end if;
         end process;
 
