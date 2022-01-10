@@ -101,7 +101,7 @@ architecture Structural of top is
 
 begin
 
-    AN         <= "00000001";   --Apagar todos los displays de 7 segmentos salvo uno
+    AN         <= "11111110";   --Apagar todos los displays de 7 segmentos salvo uno
     PUERTA     <= p_i;
     PUERTA_n   <= not p_i;   --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
     led_SENSOR <= SENSOR;       --Encendemos un led cada vez que un sensor se activa,
