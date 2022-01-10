@@ -98,14 +98,15 @@ architecture Structural of top is
     signal sync_out_i: std_logic_vector(width-1 downto 0);   --Señal que va del sincronizador al detector de flanco
     signal edge_i: std_logic_vector(width-1 downto 0);       --Señal que va del detector de flanco a la máquina de estados
     signal p_i: std_logic;                                   --Señal auxiliar entre puerta y puerta_n
+    signal led_SENSOR_i: std_logic_vector(3 downto 0);       --Señal interna que va de los switches a los leds
 
 begin
 
     AN         <= "11111110";   --Apagar todos los displays de 7 segmentos salvo uno
     PUERTA     <= p_i;
-    PUERTA_n   <= not p_i;   --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
-    led_SENSOR <= SENSOR;       --Encendemos un led cada vez que un sensor se activa,
-                                --su única utilidad es que no dejemos un switch (que simula un sensor) activado sin darnos cuenta
+    PUERTA_n   <= not p_i;        --PUERTA encenderá un color, y PUERTA_n encenderá otro diferente
+    led_SENSOR_i <= SENSOR;       --Encendemos un led cada vez que un sensor se activa,
+    led_SENSOR  <= led_SENSOR_i;  --su única utilidad es que no dejemos un switch (que simula un sensor) activado sin darnos cuenta
 --INSTANCIACIÓN DE COMPONENTES
     inst_reg_piso: reg_piso port map(
         RESET       =>  RESET,
