@@ -78,15 +78,10 @@ begin
         end process;
 
 --DECODIFICADOR DEL PRÓXIMO ESTADO: decide cuál será el siguiente estado en función de las entradas y del estado actual    
-    decodificador_proxEstado: process(RESET, BOTON_Piso, Estado_actual, SENSOR, Planta)
+    decodificador_proxEstado: process(RESET, BOTON_Piso, Estado_actual)
         begin
-            if RESET = '0' then
-                Estado_siguiente <= S0;
-            else
-                Estado_siguiente <= Estado_actual;
-                
+            Estado_siguiente <= Estado_actual;
                 case Estado_actual is
-                
                     when S0 =>
                         for i in 0 to Pisos-1 loop
                             if Boton_piso(i) = '1' and i = 0 then
@@ -137,44 +132,44 @@ begin
                         case sensor is
                             when "0001" => 
                                 if Planta = 0 then
-                                Estado_siguiente <= S0;
+                                    Estado_siguiente <= S0;
                                 end if;
                             when "0010" => 
                                 if Planta = 1 then
-                                 Estado_siguiente <= S1;
+                                    Estado_siguiente <= S1;
                                 end if; 
                             when "0100" => 
                                 if Planta = 2 then
-                                 Estado_siguiente <= S2;
+                                    Estado_siguiente <= S2;
                                 end if; 
                             when "1000" => 
                                 if Planta = 3 then
-                                 Estado_siguiente <= S3;
+                                    Estado_siguiente <= S3;
                                 end if;
                             when others =>
-                                Estado_siguiente <= Estado_siguiente;
+                                    Estado_siguiente <= Estado_actual;
                         end case; 
                  
                     when SD =>  --Solo cambia de estado cuando coinciden el sensor activado y la planta pedida
                         case sensor is
                             when "0001" => 
                                 if Planta = 0 then
-                                Estado_siguiente <= S0;
+                                    Estado_siguiente <= S0;
                                 end if;
                             when "0010" => 
                                 if Planta = 1 then
-                                 Estado_siguiente <= S1;
+                                    Estado_siguiente <= S1;
                                 end if; 
                             when "0100" => 
                                 if Planta = 2 then
-                                 Estado_siguiente <= S2;
+                                    Estado_siguiente <= S2;
                                 end if; 
                             when "1000" => 
                                 if Planta = 3 then
-                                 Estado_siguiente <= S3;
+                                    Estado_siguiente <= S3;
                                 end if;
                             when others =>
-                                Estado_siguiente <= Estado_siguiente;
+                                    Estado_siguiente <= Estado_actual;
                         end case;  
                     when SE =>
                             case ULTIMO_PISO is
@@ -254,7 +249,6 @@ begin
                                     end loop;
                             end case;                            
                 end case;
-            end if;
         end process;
     
 --DECODIFICADOR DE LAS SALIDAS: decide que valor tendrán las salidas en función del estado actual
