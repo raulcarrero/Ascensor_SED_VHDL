@@ -89,10 +89,6 @@ begin
 --test de reset
         wait for 0.33*Periodo;
         RESET<='0';
-        wait for 1ns;
-        BOTON_Piso <= "0010";
-        wait for 13ns;
-        BOTON_Piso <= "0000";
         wait for 1.33*Periodo;
         RESET <= '1';
 --test de subida
