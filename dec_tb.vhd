@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 15.01.2022 23:58:16
+-- Crete Date: 15.01.2022 23:58:16
 -- Design Name: 
 -- Module Name: dec_tb - tb
 -- Project Name: 
@@ -54,9 +54,9 @@ begin
 
     test : process
     begin
-        --Inicialización
+        --InicializaciÃ³n
         code <= (others => '0');
-        --Estímulos
+        --EstÃ­mulos
         wait for 10ns;
         code<="00";
         wait for 10ns;
