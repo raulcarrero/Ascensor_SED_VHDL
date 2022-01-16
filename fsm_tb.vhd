@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 15.01.2022 21:16:05
+-- Crete Date: 15.01.2022 21:16:05
 -- Design Name: 
 -- Module Name: fsm_tb - Behavioral
 -- Project Name: 
@@ -75,12 +75,12 @@ begin
               MOTOR       => MOTOR,
               PUERTA      => PUERTA);
 
-    --Señal de reloj
+    --SeÃ±al de reloj
     CLK <= not CLK after Periodo/2 when FinSim /= '1' else '0';
 
     test : process
     begin
-        --Inicialización
+        --InicializaciÃ³n
         EMERGENCIA <= '0';
         ULTIMO_PISO <= (others => '0');
         BOTON_Piso <= (others => '0');
