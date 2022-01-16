@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 16.01.2022 00:21:55
+-- Crete Date: 16.01.2022 00:21:55
 -- Design Name: 
 -- Module Name: top_tb - tb
 -- Project Name: 
@@ -35,7 +35,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity top_tb is
 end top_tb;
 --Consejo: Antes de simular este testbench, 
---configurar un tiempo de simulación ALTO (12 segundos por ejemplo)
+--configurar un tiempo de simulaciÃ³n ALTO (12 segundos por ejemplo)
 architecture tb of top_tb is
 
     component top
@@ -83,13 +83,13 @@ begin
               AN          => AN,
               led_SENSOR  => led_SENSOR);
 
-     -- Señal de reloj
+     -- SeÃ±al de reloj
     CLK <= not CLK after Periodo/2 when FinSim /= '1' else '0';
 
     
     test : process
     begin
-        -- Inicialización
+        -- InicializaciÃ³n
         EMERGENCIA <= '0';
         SENSOR <= (others => '0');
         BOTON_Piso <= (others => '0');
