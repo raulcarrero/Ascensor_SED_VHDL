@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 15.01.2022 23:31:16
+-- Crete Date: 15.01.2022 23:31:16
 -- Design Name: 
 -- Module Name: reg_piso_tb - tb
 -- Project Name: 
@@ -61,13 +61,13 @@ begin
               sensor      => sensor,
               ultimo_piso => ultimo_piso);
 
-    -- Señal de reloj
+    -- SeÃ±al de reloj
     clk<= not clk after Periodo/2 when FinSim /= '1' else '0';
     
 
     test : process
     begin
-        --Inicialización
+        --InicializaciÃ³n
         sensor <= (others => '0');
         reset<='1';
         
