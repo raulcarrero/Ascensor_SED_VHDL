@@ -91,7 +91,7 @@ begin
     begin
         -- Inicialización
         EMERGENCIA <= '0';
-        SENSOR <= (others => '0');
+        SENSOR <= "0001";
         BOTON_Piso <= (others => '0');
         RESET<='1';
         
@@ -107,6 +107,8 @@ begin
         BOTON_Piso <= "1000";
         wait for 2.5 us;
         BOTON_Piso <= "0000";
+        wait for 2.5 us;
+        SENSOR <= "0000";
         wait for 2.5 us;
         SENSOR <= "0010";
         wait for 2.5 us;
@@ -143,6 +145,11 @@ begin
         EMERGENCIA<='1';
         wait for 3.325 us;
         EMERGENCIA <= '0';
+    --bajamos a 1 despues de emergencia
+        wait for 2.5 us;
+        BOTON_Piso <= "0010";
+        wait for 2.5 us;
+        SENSOR <= "0010";
         
         wait for 2 us;
 
