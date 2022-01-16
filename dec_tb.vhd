@@ -32,7 +32,6 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity dec_tb is
---  Port ( );
 end dec_tb;
 
 architecture tb of dec_tb is
@@ -53,11 +52,11 @@ begin
               led  => led);
 
 
-    stimuli : process
+    test : process
     begin
-        -- EDIT Adapt initialization as needed
+        --Inicialización
         code <= (others => '0');
-        
+        --Estímulos
         wait for 10ns;
         code<="00";
         wait for 10ns;
@@ -74,5 +73,8 @@ begin
         code<="00";
 
         wait;
+        assert FALSE
+            report "success:simulation finished."
+            severity failure;
     end process;
 end tb;

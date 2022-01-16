@@ -61,13 +61,13 @@ begin
               sensor      => sensor,
               ultimo_piso => ultimo_piso);
 
-    -- Clock generation
+    -- Señal de reloj
     clk<= not clk after Periodo/2 when FinSim /= '1' else '0';
     
 
     test : process
     begin
-        -- EDIT Adapt initialization as needed
+        --Inicialización
         sensor <= (others => '0');
         reset<='1';
         
@@ -86,12 +86,13 @@ begin
         wait for 13ns;
         sensor<="0001";
         
-
-        -- EDIT Add stimuli here
         wait for 10 * Periodo;
 
-        -- Stop the clock and hence terminate the simulation
+        -- Paro del reloj
         FinSim <= '1';
+         assert FALSE
+            report "success:simulation finished."
+            severity failure;
         wait;
     end process;
 end tb;
