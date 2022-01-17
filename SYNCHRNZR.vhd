@@ -2,7 +2,7 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 29.10.2021 16:54:58
+-- Create Date: 04.01.2022 18:10:06
 -- Design Name: 
 -- Module Name: SYNCHRNZR - Behavioral
 -- Project Name: 
@@ -18,33 +18,33 @@
 -- 
 ----------------------------------------------------------------------------------
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+
 entity SYNCHRNZR is
+    generic(width : positive := 4);    --Número de bits que soporta
     port (
-        CLK      : in  std_logic;   --Reloj común
-        ASYNC_IN : in  std_logic;   --Entrada asíncrona
-        SYNC_OUT : out std_logic    --Salida síncrona
+        CLK      : in  std_logic;                           --Reloj
+        ASYNC_IN : in  std_logic_vector(width-1 downto 0);  --Entrada asíncrona de 4 bits
+        SYNC_OUT : out std_logic_vector(width-1 downto 0)   --Salida síncrona de 4 bits
     );
 end SYNCHRNZR;
 
-architecture BEHAVIORAL of SYNCHRNZR is
-    signal sreg : std_logic_vector(1 downto 0);
+architecture Behavioral of SYNCHRNZR is
+--DECLARACIÓN DE TIPOS Y SEÑALES INTERNAS
+    type matriz is array (width-1 downto 0) of std_logic_vector(1 downto 0);
+    signal sreg : matriz;
+
 begin
-        process (CLK)
-        begin
-                if rising_edge(CLK) then
-                    sync_out <= sreg(1);
-                    sreg <= sreg(0) & async_in;
-                end if;
-        end process;
-end BEHAVIORAL;
+    process (CLK)
+    begin
+        if rising_edge(CLK) then
+            for i in 0 to width-1 loop
+                sync_out(i) <= sreg(i)(1);
+                sreg(i) <= sreg(i)(0) & async_in(i);
+            end loop;
+        end if;
+    end process;
+end Behavioral;
